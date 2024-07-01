@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
+using Employees_API.Exceptions;
 
 namespace Employees_API.Controllers
 {
@@ -21,11 +22,45 @@ namespace Employees_API.Controllers
             dbContext = applicationDBContext;
         }
 
-        public Task<IActionResult> Get()
+        [HttpGet]
+
+        public async Task<IActionResult> Get()
         {
-            throw new NotImplementedException();
+            try
+            {
+                try
+                {
+                    var results = await Employees.GetAllAsync();
+                    List<GetEmployeeDTO> employees = new();
+
+                    foreach (var employee in results)
+                    {
+                        var employeeDTO = new GetEmployeeDTO()
+                        {
+                            Id = employee.Id,
+                            Name = employee.Name,
+                            Email = employee.Email,
+                            Address = employee.Address,
+                            IsAvailable = employee.IsAvailable,
+                            DepartmentId = employee.DepartmentId,
+                        };
+                        employees.Add(employeeDTO);
+                    }
+                    return Ok(new { success = true, employees = employees });
+                                      
+                }
+                catch (CollectionIsEmptyException)
+                {
+                    return NotFound(new { success = false, message = "No employees were found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new {success = false,  message = $"Server Error {ex.Message}" });
+            }
         }
 
+        [HttpPost]  
         public async Task<IActionResult> Post(AddEmployeeDTO Value)
         {
             try
@@ -40,16 +75,71 @@ namespace Employees_API.Controllers
             }
         }
 
-        public Task<IActionResult> GetById(int id)
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                try
+                {
+                    var result = await Employees.GetById(id);
+                    return Ok(new
+                    {
+                        success = true,
+                        employee = new GetEmployeeDTO()
+                        {
+                            Id = result.Id,
+                            Name = result.Name,
+                            Email = result.Email,
+                            Address = result.Address,
+                            DepartmentId = result.DepartmentId
+                            
+                        }
+                    });
+                }
+                catch (ObjectIsNullException ex)
+                {
+                    return NotFound(new { success = false, message = $"Employee was not found. {ex.Message}" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
+            }
         }
 
+        [Route("Department/Assign")]
+        [HttpPut]
+        public async Task<IActionResult> AssignDept(int employeeId, int departmentId)
+        {
+            try
+            {
+                try
+                {
+                    Employees.AssignDepartment(employeeId, departmentId);
+                    return Ok(new { success = true, message = "User department has been updated." });
+                }
+                catch (ObjectIsNullException ex)
+                {
+                    return NotFound(new { success = false, message = $"{ex.Message}" });
+                }
+            }catch(Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
+            }
+        }
+
+
+
+
+        [HttpDelete("{id}")]
         public Task<IActionResult> DeleteById(int id)
         {
             throw new NotImplementedException();
         }
 
+        [HttpPut]
         public Task<IActionResult> UpdateById(EditEmployeeDTO Value)
         {
             throw new NotImplementedException();

@@ -6,5 +6,10 @@
         {
             
         }
+
+        public CollectionIsEmptyException(string message):base(message)
+        {
+            
+        }
     }
 }

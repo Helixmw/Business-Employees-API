@@ -6,5 +6,10 @@
         {
             
         }
+
+        public ObjectIsNullException(string message):base(message)
+        {
+            
+        }
     }
 }
