@@ -1,5 +1,6 @@
 ﻿using Employees_API.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Employees_API.Exceptions;
 
 namespace Employees_API.Data
 {
@@ -25,13 +26,19 @@ namespace Employees_API.Data
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await DbSet.OrderByDescending(x => x).ToListAsync();
+           var results = await DbSet.OrderByDescending(x => x).ToListAsync();
+            if (results.Count is 0)
+                throw new CollectionIsEmptyException();
+
+            return results;
         }
 
         public async Task<T> GetById(int id)
         {
-             var results = await DbSet.Where(x => x.Id == id).FirstOrDefaultAsync();
-            return results;
+             var result = await DbSet.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (result is null)
+                throw new ObjectIsNullException();            
+            return result;
         }
 
 
