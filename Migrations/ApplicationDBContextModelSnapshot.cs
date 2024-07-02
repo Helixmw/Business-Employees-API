@@ -42,6 +42,25 @@ namespace Employees_API.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("Employees_API.Models.DepartmentRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DepartmentRoles");
+                });
+
             modelBuilder.Entity("Employees_API.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -72,6 +91,25 @@ namespace Employees_API.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Employees_API.Models.EmployeeRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeesRoles");
                 });
 
             modelBuilder.Entity("Employees_API.Models.Role", b =>
