@@ -1,6 +1,8 @@
-﻿namespace Employees_API.Exceptions
+﻿using Employees_API.Interfaces;
+
+namespace Employees_API.Exceptions
 {
-    public class ObjectIsNullException : Exception
+    public class ObjectIsNullException : Exception, IException<ObjectIsNullException>
     {
         public ObjectIsNullException()
         {

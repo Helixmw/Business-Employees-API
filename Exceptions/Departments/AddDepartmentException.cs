@@ -1,4 +1,6 @@
-﻿namespace Employees_API.Exceptions.Departments
+﻿using Employees_API.Interfaces;
+
+namespace Employees_API.Exceptions.Departments
 {
     public class AddDepartmentException : Exception
     {
