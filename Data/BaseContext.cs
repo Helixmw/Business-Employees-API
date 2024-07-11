@@ -7,16 +7,19 @@ namespace Employees_API.Data
     public class BaseContext<T> : IBaseContext<T> where T : class, IIdentification
     {
 
-        private readonly DbSet<T> DbSet;
+        private readonly DbSet<T> DbSet = null!;
 
-        private readonly ApplicationDBContext _dbContext;
-        public BaseContext(DbSet<T> DbSet)
+        private readonly ApplicationDBContext _dbContext = null!;
+        public BaseContext(DbSet<T> DbSet, ApplicationDBContext dBContext)
         {
             this.DbSet = DbSet;
+            this._dbContext = dBContext;
         }
         public async Task AddAsync(T Value)
         {
             await DbSet.AddAsync(Value);
+            await _dbContext.SaveChangesAsync();
+            
         }
 
         public void Delete(T Value)

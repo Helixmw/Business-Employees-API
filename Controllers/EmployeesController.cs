@@ -6,20 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Employees_API.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Employees_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeesController : ControllerBase, IController<AddEmployeeDTO, EditEmployeeDTO>
     {
-         public Employees Employees { get; set; }
-        private readonly ApplicationDBContext dbContext;
+        public Employees Employees { get; set; } = null!;
+        public Departments Departments { get; set; } = null!;
+
+
 
         public EmployeesController(ApplicationDBContext applicationDBContext)
         {
             Employees = new Employees(applicationDBContext); 
-            dbContext = applicationDBContext;
+            Departments = new Departments(applicationDBContext);
+          
+
         }
 
         [HttpGet]
@@ -63,18 +69,33 @@ namespace Employees_API.Controllers
         [HttpPost]  
         public async Task<IActionResult> Post(AddEmployeeDTO Value)
         {
-            try
-            {
-                await Employees.AddAsync(new Employee() { Name = Value.Name, Email = Value.Email, Address = Value.Address, DepartmentId = Value.DepartmentId });
-                await dbContext.SaveChangesAsync();
-                return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
-            }
-        }
 
+
+
+                try
+                {     
+                var dept = await Departments.GetById(Value.DepartmentId);
+                    if (dept is null)
+                        throw new ObjectIsNullException("The chosen department does not exist");
+
+
+                Employee employee = new Employee()
+                {
+                    Name = Value.Name,
+                    Email = Value.Email,
+                    Address = Value.Address,
+                    DepartmentId = Value.DepartmentId
+                };
+
+                    await Employees.AddAsync(employee);
+                    return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
+
+                 }
+                    catch(ObjectIsNullException ex)
+                  {
+                     return NotFound(new { success = false, message = ex.Message });
+                  }
+            }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -94,7 +115,7 @@ namespace Employees_API.Controllers
                             Email = result.Email,
                             Address = result.Address,
                             DepartmentId = result.DepartmentId
-                            
+
                         }
                     });
                 }
@@ -124,7 +145,8 @@ namespace Employees_API.Controllers
                 {
                     return NotFound(new { success = false, message = $"{ex.Message}" });
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
@@ -144,5 +166,10 @@ namespace Employees_API.Controllers
         {
             throw new NotImplementedException();
         }
+
     }
-}
+
+
+       
+    }
+

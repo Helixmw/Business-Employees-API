@@ -22,9 +22,14 @@ namespace Employees_API.Data
                 Email = user.Email,
                 
             };
-            var PasswordHash = UserManager.PasswordHasher.HashPassword(newuser, user.Password);  
-            newuser.PasswordHash = PasswordHash;
-            await UserManager.CreateAsync(newuser);
+            var result = await UserManager.CreateAsync(newuser, user.Password);
+            if (result.Succeeded)
+                await SignInManager.SignInAsync(newuser, true);
+
+            else
+                throw new InvalidInputException("Invalid Entry", result.Errors);
+
+            
           
             
            

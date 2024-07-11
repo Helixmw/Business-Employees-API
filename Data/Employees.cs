@@ -8,9 +8,11 @@ namespace Employees_API.Data
     public class Employees : BaseContext<Employee>
     {
         private readonly ApplicationDBContext _dbContext;
-        public Employees(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Employees)
+
+        public Employees(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Employees, applicationDBContext)
         {
             _dbContext = applicationDBContext;
+           
         }
 
        
