@@ -28,7 +28,7 @@ namespace Employees_API.Controllers
                 try
                 {
                     await _users.SignUpAsync(user);
-                    return Ok(new { success = true, message = "Successfully Signed Up" });
+                    return Ok(new { success = true, message = "Successfully Signed Up!!!" });
                 }
                 catch (InvalidInputException ex)
                 {
