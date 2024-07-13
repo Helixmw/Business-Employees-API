@@ -1,21 +1,19 @@
-﻿using Employees_API.Exceptions;
+﻿using Employees_API.Data;
+using Employees_API.Exceptions;
 using Employees_API.Interfaces;
 using Employees_API.Models;
 using Microsoft.Identity.Client;
 
-namespace Employees_API.Data
+namespace Employees_API.Utilities
 {
-    public class Employees : BaseContext<Employee>
+    public class Employees : BaseContext<Employee>, IEmployees
     {
         private readonly ApplicationDBContext _dbContext;
-
         public Employees(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Employees, applicationDBContext)
         {
             _dbContext = applicationDBContext;
-           
         }
 
-       
 
         public void AssignDepartment(int employeeId, int departmentId)
         {
@@ -29,7 +27,7 @@ namespace Employees_API.Data
 
             result.DepartmentId = departmentId;
             _dbContext.Update(result);
-   
+
         }
     }
 

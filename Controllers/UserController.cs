@@ -1,6 +1,7 @@
 ﻿using Employees_API.Data;
 using Employees_API.DTOs.Users;
 using Employees_API.Exceptions;
+using Employees_API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,11 @@ namespace Employees_API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        public Users Users { get; set; }
+        IUsers _users;
 
-        public UserController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UserController(IUsers users)
         {
-            Users = new Users(userManager, signInManager);
+           _users = users;
         }
 
         [Route("SignUp")]
@@ -26,7 +27,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    await Users.SignUpAsync(user);
+                    await _users.SignUpAsync(user);
                     return Ok(new { success = true, message = "Successfully Signed Up" });
                 }
                 catch (InvalidInputException ex)
@@ -50,7 +51,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var res = await Users.LogInAsync(user);
+                    var res = await _users.LogInAsync(user);
                     if (res is true)
                         return Ok(new { success = true, message = "You have logged in" });
 
@@ -73,7 +74,7 @@ namespace Employees_API.Controllers
         {
             try
             {
-              await Users.LogOutAsync();
+              await _users.LogOutAsync();
               return Ok(new { success = true, message = "You have logged out" });
             }catch(Exception ex)
             {

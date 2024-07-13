@@ -1,9 +1,11 @@
-﻿using Employees_API.Models;
+﻿using Employees_API.Data;
+using Employees_API.Interfaces;
+using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Employees_API.Data
+namespace Employees_API.Utilities
 {
-    public class Departments : BaseContext<Department>
+    public class Departments : BaseContext<Department>, IDepartments
     {
         private readonly ApplicationDBContext _dbContext;
         public Departments(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Departments, applicationDBContext)
@@ -17,6 +19,6 @@ namespace Employees_API.Data
             _dbContext.Employees.RemoveRange(employees);
         }
 
-        
+
     }
 }
