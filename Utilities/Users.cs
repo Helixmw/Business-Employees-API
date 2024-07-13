@@ -1,10 +1,11 @@
 ﻿using Employees_API.DTOs.Users;
 using Employees_API.Exceptions;
+using Employees_API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace Employees_API.Data
+namespace Employees_API.Utilities
 {
-    public class Users
+    public class Users : IUsers
     {
         public readonly UserManager<IdentityUser> UserManager;
         public readonly SignInManager<IdentityUser> SignInManager;
@@ -20,7 +21,7 @@ namespace Employees_API.Data
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                
+
             };
             var result = await UserManager.CreateAsync(newuser, user.Password);
             if (result.Succeeded)
@@ -29,11 +30,7 @@ namespace Employees_API.Data
             else
                 throw new InvalidInputException("Invalid Entry", result.Errors);
 
-            
-          
-            
-           
-            
+
         }
 
         public async Task<bool> LogInAsync(LoginUserDTO user)
@@ -41,7 +38,7 @@ namespace Employees_API.Data
             var _user = await UserManager.FindByEmailAsync(user.Email);
             if (_user is null)
                 throw new ObjectIsNullException("The user by this Email Address was not found.");
-          
+
             var result = await SignInManager.PasswordSignInAsync(_user, user.Password, true, false);
 
             return result.Succeeded;

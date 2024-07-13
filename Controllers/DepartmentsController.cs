@@ -14,11 +14,11 @@ namespace Employees_API.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase, IController<AddDepartmentDTO, EditDepartmentDTO>
     {
-        public Departments Departments;
-        private readonly ApplicationDBContext dBContext;
-        public DepartmentsController(ApplicationDBContext applicationDBContext)
+        IDepartments _departments;
+        readonly ApplicationDBContext dBContext;
+        public DepartmentsController(ApplicationDBContext applicationDBContext, IDepartments departments)
         {
-            Departments = new Departments(applicationDBContext);
+            _departments = departments;
             dBContext = applicationDBContext;
         }
         [HttpDelete("{id}")]
@@ -28,11 +28,11 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var result = await Departments.GetById(id);
+                    var result = await _departments.GetById(id);
                     try
                     {
-                        Departments.Delete(result);
-                        Departments.RemoveDeptEmployees(id);
+                        _departments.Delete(result);
+                        _departments.RemoveDeptEmployees(id);
                         await dBContext.SaveChangesAsync();
                         return Ok(new { success = true, departments = $"Department was deleted." });
                     }
@@ -59,7 +59,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var results = await Departments.GetAllAsync();
+                    var results = await _departments.GetAllAsync();
                     return Ok(new { success = true, departments = results });
                 }
                 catch (CollectionIsEmptyException)
@@ -80,7 +80,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var result = await Departments.GetById(id);
+                    var result = await _departments.GetById(id);
                     return Ok(new { success = true, department = result });
                 }
                 catch (ObjectIsNullException)
@@ -102,7 +102,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    await Departments.AddAsync(new Department() { Name = Value.Name, Description = Value.Description });
+                    await _departments.AddAsync(new Department() { Name = Value.Name, Description = Value.Description });
                     await dBContext.SaveChangesAsync();
                     return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
                 }
@@ -124,7 +124,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    Departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description });
+                    _departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description });
                     await dBContext.SaveChangesAsync();
                     return Ok(new { success = true, message = $"Successfully updated {Value.Name}" });
                 }catch(UpdateDepartmentException ex)
