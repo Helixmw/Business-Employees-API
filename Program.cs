@@ -1,4 +1,6 @@
 using Employees_API.Data;
+using Employees_API.Interfaces;
+using Employees_API.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +22,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddScoped<UserManager<IdentityUser>>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
-builder.Services.AddScoped<RoleManager<IdentityRole>>();  
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
+builder.Services.AddScoped<IEmployees, Employees>();
+builder.Services.AddScoped<IDepartments, Departments>();
+builder.Services.AddScoped<IEmployeeRoles, EmployeeRoles>();
+builder.Services.AddScoped<IUsers, Users>();
                 
 
 var app = builder.Build();

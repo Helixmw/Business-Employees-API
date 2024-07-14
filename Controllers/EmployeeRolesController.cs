@@ -10,12 +10,12 @@ namespace Employees_API.Controllers
     [ApiController]
     public class EmployeeRolesController : ControllerBase
     {
-        
-        public EmployeeRoles EmployeeRoles { get; set; }
-        private readonly ApplicationDBContext dbContext;
-        public EmployeeRolesController(ApplicationDBContext applicationDBContext)
+
+        IEmployeeRoles _employeeRoles;
+        readonly ApplicationDBContext? dbContext;
+        public EmployeeRolesController(ApplicationDBContext applicationDBContext, IEmployeeRoles employeeRoles)
         {
-            EmployeeRoles = new EmployeeRoles(applicationDBContext);
+            _employeeRoles = employeeRoles;
         }
        
         [HttpPost]
@@ -23,7 +23,7 @@ namespace Employees_API.Controllers
         {
             try
             {
-                EmployeeRoles.AssignRole(employeeId, roleId);
+                _employeeRoles.AssignRole(employeeId, roleId);
                 return Ok(new {success = true, message = "Employee role has been assigned"});
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace Employees_API.Controllers
         {
             try
             {
-                EmployeeRoles.ReAssignRole(employeeId, oldRoleId, newRoleId);
+                _employeeRoles.ReAssignRole(employeeId, oldRoleId, newRoleId);
                 return Ok(new { success = true, message = "Employee has been assigned a new role" });
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                EmployeeRoles.RemoveEmployee(employeeId, roleId);
+                _employeeRoles.RemoveEmployee(employeeId, roleId);
                 return Ok(new { success = true, message = "Employee role has been removed for the role" });
                 }catch(ObjectIsNullException ex)
                 {

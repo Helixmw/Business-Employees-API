@@ -15,17 +15,13 @@ namespace Employees_API.Controllers
     [Authorize]
     public class EmployeesController : ControllerBase, IController<AddEmployeeDTO, EditEmployeeDTO>
     {
-        public Employees Employees { get; set; } = null!;
-        public Departments Departments { get; set; } = null!;
+        IEmployees _employees;
+        IDepartments _departments; 
 
-
-
-        public EmployeesController(ApplicationDBContext applicationDBContext)
+        public EmployeesController(ApplicationDBContext applicationDBContext, IEmployees employees, IDepartments departments)
         {
-            Employees = new Employees(applicationDBContext); 
-            Departments = new Departments(applicationDBContext);
-          
-
+            _employees = employees;
+            _departments = departments;               
         }
 
         [HttpGet]
@@ -36,7 +32,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var results = await Employees.GetAllAsync();
+                    var results = await _employees.GetAllAsync();
                     List<GetEmployeeDTO> employees = new();
 
                     foreach (var employee in results)
@@ -70,11 +66,9 @@ namespace Employees_API.Controllers
         public async Task<IActionResult> Post(AddEmployeeDTO Value)
         {
 
-
-
                 try
                 {     
-                var dept = await Departments.GetById(Value.DepartmentId);
+                var dept = await _departments.GetById(Value.DepartmentId);
                     if (dept is null)
                         throw new ObjectIsNullException("The chosen department does not exist");
 
@@ -87,7 +81,7 @@ namespace Employees_API.Controllers
                     DepartmentId = Value.DepartmentId
                 };
 
-                    await Employees.AddAsync(employee);
+                    await _employees.AddAsync(employee);
                     return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
 
                  }
@@ -104,7 +98,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var result = await Employees.GetById(id);
+                    var result = await _employees.GetById(id);
                     return Ok(new
                     {
                         success = true,
@@ -138,7 +132,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    Employees.AssignDepartment(employeeId, departmentId);
+                    _employees.AssignDepartment(employeeId, departmentId);
                     return Ok(new { success = true, message = "User department has been updated." });
                 }
                 catch (ObjectIsNullException ex)

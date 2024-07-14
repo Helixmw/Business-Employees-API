@@ -1,9 +1,10 @@
-﻿using Employees_API.Exceptions;
+﻿using Employees_API.Data;
+using Employees_API.Exceptions;
 using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace Employees_API.Data
+namespace Employees_API.Utilities
 {
     public class DepartmentRoles
     {
@@ -46,13 +47,14 @@ namespace Employees_API.Data
         public async void CheckNewRole(int newRoleId)
         {
             var role = await applicationDBContext.Roles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
-            if(role is null)
+            if (role is null)
                 throw new ObjectIsNullException("This role does not exist");
         }
 
-        public async Task<DepartmentRole> CheckAssignedRole(int departmentId, int roleId){
-           var deptRole = await applicationDBContext.DepartmentRoles.Where(x => x.DepartmentId == departmentId)
-                .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();
+        public async Task<DepartmentRole> CheckAssignedRole(int departmentId, int roleId)
+        {
+            var deptRole = await applicationDBContext.DepartmentRoles.Where(x => x.DepartmentId == departmentId)
+                 .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();
             if (deptRole is null)
                 throw new ObjectIsNullException("This role does not exit under this department");
 

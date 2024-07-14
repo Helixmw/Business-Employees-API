@@ -1,10 +1,12 @@
-﻿using Employees_API.Exceptions;
+﻿using Employees_API.Data;
+using Employees_API.Exceptions;
+using Employees_API.Interfaces;
 using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Employees_API.Data
+namespace Employees_API.Utilities
 {
-    public class EmployeeRoles
+    public class EmployeeRoles : IEmployeeRoles
     {
         private readonly ApplicationDBContext applicationDBContext;
 
@@ -36,20 +38,20 @@ namespace Employees_API.Data
 
         }
 
-       
+
         public async void RemoveEmployee(int employeeId, int roleId)
         {
             CheckEmployeeAndRole(employeeId, roleId);
             var result = await applicationDBContext.EmployeesRoles.Where(x => x.EmployeeId == employeeId)
                    .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();
-            if(result is not null)
+            if (result is not null)
             {
-            applicationDBContext.EmployeesRoles.Remove(result);
-            await applicationDBContext.SaveChangesAsync();
+                applicationDBContext.EmployeesRoles.Remove(result);
+                await applicationDBContext.SaveChangesAsync();
             }
 
             else
-            throw new ObjectIsNullException("This employee was not assigned a role");
+                throw new ObjectIsNullException("This employee was not assigned a role");
         }
 
         public async void CheckNewRole(int newRoleId)
@@ -76,7 +78,7 @@ namespace Employees_API.Data
         }
 
 
-            public async void CheckEmployeeAndRole(int employeeId, int roleId)
+        public async void CheckEmployeeAndRole(int employeeId, int roleId)
         {
             var employee = await applicationDBContext.Employees.Where(x => x.Id == employeeId).FirstOrDefaultAsync();
             if (employee is null)
@@ -86,6 +88,6 @@ namespace Employees_API.Data
             if (role is null)
                 throw new ObjectIsNullException("This role was not found");
         }
-      
+
     }
 }
