@@ -4,5 +4,10 @@ Written classes are in the following directories for review.
 - Controllers
 - Data
 - DTOs
-- Excpetions
+- Exceptions
 - Models
+- Interfaces
+- Models
+- Utilities
+
+View Program.cs for dependecies
