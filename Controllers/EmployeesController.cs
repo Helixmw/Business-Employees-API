@@ -57,7 +57,7 @@ namespace Employees_API.Controllers
                 }
                 catch (CollectionIsEmptyException)
                 {
-                    return NotFound(new { success = false, message = "No employees were found" });
+                    return NotFound(new { success = false, message = "No employees were found!!" });
                 }
             }
             catch (Exception ex)
