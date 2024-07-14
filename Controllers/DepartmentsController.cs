@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Employees_API.Exceptions.Departments;
 using Employees_API.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Employees_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DepartmentsController : ControllerBase, IController<AddDepartmentDTO, EditDepartmentDTO>
     {
         IDepartments _departments;

@@ -2,6 +2,7 @@
 using Employees_API.DTOs.Users;
 using Employees_API.Exceptions;
 using Employees_API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace Employees_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         IUsers _users;
@@ -27,8 +29,8 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    await Users.SignUpAsync(user);
-                    return Ok(new { success = true, message = "YOU HAVE Successfully!!" });
+                    await _users.SignUpAsync(user);
+                    return Ok(new { success = true, message = "You have successfully signed up!" });
                 }
                 catch (InvalidInputException ex)
                 {

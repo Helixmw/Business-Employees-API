@@ -16,7 +16,8 @@ namespace Employees_API.Controllers
     public class EmployeesController : ControllerBase, IController<AddEmployeeDTO, EditEmployeeDTO>
     {
         IEmployees _employees;
-        IDepartments _departments; 
+        IDepartments _departments;
+        List<GetEmployeeDTO> employees = new();
 
         public EmployeesController(ApplicationDBContext applicationDBContext, IEmployees employees, IDepartments departments)
         {
@@ -33,11 +34,12 @@ namespace Employees_API.Controllers
                 try
                 {
                     var results = await _employees.GetAllAsync();
-                    List<GetEmployeeDTO> employees = new();
+                    
 
                     foreach (var employee in results)
                     {
-                        var employeeDTO = new GetEmployeeDTO()
+
+                        employee.GetDTO = new GetEmployeeDTO()
                         {
                             Id = employee.Id,
                             Name = employee.Name,
@@ -46,7 +48,7 @@ namespace Employees_API.Controllers
                             IsAvailable = employee.IsAvailable,
                             DepartmentId = employee.DepartmentId,
                         };
-                        employees.Add(employeeDTO);
+                        employees.Add(employee.GetDTO);
                     }
                     return Ok(new { success = true, employees = employees });
                                       
@@ -126,7 +128,7 @@ namespace Employees_API.Controllers
 
         [Route("Department/Assign")]
         [HttpPut]
-        public async Task<IActionResult> AssignDept(int employeeId, int departmentId)
+        public IActionResult AssignDept(int employeeId, int departmentId)
         {
             try
             {

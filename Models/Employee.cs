@@ -1,10 +1,11 @@
-﻿using Employees_API.Interfaces;
+﻿using Employees_API.DTOs.Employees;
+using Employees_API.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Employees_API.Models
 {
-    public class Employee : IIdentification
+    public class Employee : IIdentification, IModel
     {
         [Key]
         public int Id { get; set; }
@@ -20,6 +21,8 @@ namespace Employees_API.Models
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
         public Department Department { get; set; } = null!;
+
+        public GetEmployeeDTO? GetDTO;
 
     }
 }
