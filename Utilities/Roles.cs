@@ -6,7 +6,7 @@ namespace Employees_API.Utilities
 {
     public class Roles : BaseContext<Role>, IRoles
     {
-        public Roles(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Roles, applicationDBContext)
+        public Roles(ApplicationDBContext applicationDBContext) : base(applicationDBContext.EmployeeRoles, applicationDBContext)
         {
 
         }

@@ -46,7 +46,7 @@ namespace Employees_API.Utilities
 
         public async void CheckNewRole(int newRoleId)
         {
-            var role = await applicationDBContext.Roles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
+            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
             if (role is null)
                 throw new ObjectIsNullException("This role does not exist");
         }
@@ -67,7 +67,7 @@ namespace Employees_API.Utilities
             if (department is null)
                 throw new ObjectIsNullException("This department does not exist");
 
-            var role = await applicationDBContext.Roles.Where(x => x.Id == roleId).FirstOrDefaultAsync();
+            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == roleId).FirstOrDefaultAsync();
             if (role is null)
                 throw new ObjectIsNullException("This role was not found");
         }

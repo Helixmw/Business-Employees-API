@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Employees_API.Models
 {
-    public class Department : IIdentification
+    public class Department : IIdentification, IModel
     {
         [Key]
         public int Id { get; set; }

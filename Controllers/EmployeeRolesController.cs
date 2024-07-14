@@ -1,6 +1,7 @@
 ﻿using Employees_API.Data;
 using Employees_API.Exceptions;
 using Employees_API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +9,12 @@ namespace Employees_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeeRolesController : ControllerBase
     {
 
         IEmployeeRoles _employeeRoles;
-        readonly ApplicationDBContext? dbContext;
-        public EmployeeRolesController(ApplicationDBContext applicationDBContext, IEmployeeRoles employeeRoles)
+        public EmployeeRolesController(IEmployeeRoles employeeRoles)
         {
             _employeeRoles = employeeRoles;
         }
