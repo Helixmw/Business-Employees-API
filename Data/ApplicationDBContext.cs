@@ -11,7 +11,7 @@ namespace Employees_API.Data
             
         }
 
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<IEmployee> Employees { get; set; }
 
         public DbSet<Department> Departments { get; set; }
 

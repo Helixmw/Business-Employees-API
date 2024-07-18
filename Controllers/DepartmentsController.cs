@@ -14,7 +14,7 @@ namespace Employees_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DepartmentsController : ControllerBase, IController<AddDepartmentDTO, EditDepartmentDTO>
+    public class DepartmentsController : ControllerBase, IController<IAddDepartmentDTO, IEditDepartmentDTO>, IDepartmentsController
     {
         IDepartments _departments;
         readonly ApplicationDBContext dBContext;
@@ -98,7 +98,7 @@ namespace Employees_API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(AddDepartmentDTO Value)
+        public async Task<IActionResult> Post(IAddDepartmentDTO Value)
         {
             try
             {
@@ -115,12 +115,12 @@ namespace Employees_API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {success = false, message = $"Server Error : {ex.Message}"});
+                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateById([FromBody] EditDepartmentDTO Value)
+        public async Task<IActionResult> UpdateById([FromBody] IEditDepartmentDTO Value)
         {
             try
             {
@@ -129,11 +129,13 @@ namespace Employees_API.Controllers
                     _departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description });
                     await dBContext.SaveChangesAsync();
                     return Ok(new { success = true, message = $"Successfully updated {Value.Name}" });
-                }catch(UpdateDepartmentException ex)
+                }
+                catch (UpdateDepartmentException ex)
                 {
                     return BadRequest(new { success = false, message = $"Something went wrong. Try again later {ex.Message}" });
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
             }

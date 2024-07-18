@@ -6,7 +6,7 @@ using Microsoft.Identity.Client;
 
 namespace Employees_API.Utilities
 {
-    public class Employees : BaseContext<Employee>, IEmployees
+    public class Employees : BaseContext<IEmployee>, IEmployees
     {
         private readonly ApplicationDBContext _dbContext;
         public Employees(ApplicationDBContext applicationDBContext) : base(applicationDBContext.Employees, applicationDBContext)

@@ -12,18 +12,18 @@ namespace Employees_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class UserController : ControllerBase, IUserController
     {
         IUsers _users;
 
         public UserController(IUsers users)
         {
-           _users = users;
+            _users = users;
         }
 
         [Route("SignUp")]
         [HttpPost]
-        public async Task<IActionResult> SignUp([FromBody] AddUserDTO user)
+        public async Task<IActionResult> SignUp([FromBody] IAddUserDTO user)
         {
             try
             {
@@ -36,8 +36,8 @@ namespace Employees_API.Controllers
                 {
                     return BadRequest(new { success = false, message = ex.Message, errors = ex.Errors });
                 }
-                
-                
+
+
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace Employees_API.Controllers
 
         [Route("Login")]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUserDTO user)
+        public async Task<IActionResult> Login(ILoginUserDTO user)
         {
             try
             {
@@ -58,12 +58,14 @@ namespace Employees_API.Controllers
                         return Ok(new { success = true, message = "You have logged in" });
 
                     return BadRequest(new { success = false, message = "Incorrect Email and Password Combination." });
-                 
-                }catch(ObjectIsNullException ex)
+
+                }
+                catch (ObjectIsNullException ex)
                 {
                     return NotFound(new { success = false, message = ex.Message });
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
@@ -76,15 +78,16 @@ namespace Employees_API.Controllers
         {
             try
             {
-              await _users.LogOutAsync();
-              return Ok(new { success = true, message = "You have logged out" });
-            }catch(Exception ex)
+                await _users.LogOutAsync();
+                return Ok(new { success = true, message = "You have logged out" });
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-        
-        
+
+
 
     }
 }

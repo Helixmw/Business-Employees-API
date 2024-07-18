@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Employees_API.DTOs.Employees
 {
-    public class AddEmployeeDTO
+    public class AddEmployeeDTO : IAddEmployeeDTO
     {
         [Required(ErrorMessage = "Please provide Employee Name")]
         public string? Name { get; set; }

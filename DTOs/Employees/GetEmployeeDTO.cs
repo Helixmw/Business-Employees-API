@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Employees_API.DTOs.Employees
 {
-    public class GetEmployeeDTO
+    public class GetEmployeeDTO : IGetEmployeeDTO
     {
 
         public int Id { get; set; }
-        
+
         public string? Name { get; set; }
 
         public string? Email { get; set; }

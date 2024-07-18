@@ -1,5 +1,9 @@
 using Employees_API.Data;
+using Employees_API.DTOs.Departments;
+using Employees_API.DTOs.Employees;
+using Employees_API.DTOs.Users;
 using Employees_API.Interfaces;
+using Employees_API.Models;
 using Employees_API.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +28,16 @@ builder.Services.AddScoped<UserManager<IdentityUser>>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
+builder.Services.AddScoped<IEmployee, Employee>();
 builder.Services.AddScoped<IEmployees, Employees>();
 builder.Services.AddScoped<IDepartments, Departments>();
 builder.Services.AddScoped<IEmployeeRoles, EmployeeRoles>();
+builder.Services.AddScoped<IGetEmployeeDTO, GetEmployeeDTO>();
+builder.Services.AddScoped<IAddEmployeeDTO, AddEmployeeDTO>();
+builder.Services.AddScoped<IAddUserDTO, AddUserDTO>();
+builder.Services.AddScoped<ILoginUserDTO, LoginUserDTO>();
+builder.Services.AddScoped<IAddDepartmentDTO, AddDepartmentDTO>();
+builder.Services.AddScoped<IEditDepartmentDTO, EditDepartmentDTO>();
 builder.Services.AddScoped<IUsers, Users>();
                 
 

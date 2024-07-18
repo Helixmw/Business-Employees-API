@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Employees_API.Models
 {
-    public class Employee : IIdentification, IModel
+    public class Employee : IEmployee
     {
         [Key]
         public int Id { get; set; }
@@ -22,7 +22,7 @@ namespace Employees_API.Models
         public int DepartmentId { get; set; }
         public Department Department { get; set; } = null!;
 
-        public GetEmployeeDTO? GetDTO;
+        
 
     }
 }

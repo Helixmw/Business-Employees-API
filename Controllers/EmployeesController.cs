@@ -13,16 +13,26 @@ namespace Employees_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EmployeesController : ControllerBase, IController<AddEmployeeDTO, EditEmployeeDTO>
+    public class EmployeesController : ControllerBase, IController<IAddEmployeeDTO, IEditEmployeeDTO>, IEmployeesController
     {
+        IEmployee _employeeModel;
         IEmployees _employees;
         IDepartments _departments;
-        List<GetEmployeeDTO> employees = new();
+        IGetEmployeeDTO _getEmployeeDTO;
+        List<IGetEmployeeDTO> _getEmployees;
 
-        public EmployeesController(ApplicationDBContext applicationDBContext, IEmployees employees, IDepartments departments)
+        public EmployeesController(ApplicationDBContext applicationDBContext,
+            IEmployees employees, IDepartments departments,
+            IEmployee employeeModel,
+            IGetEmployeeDTO getEmployeeDTO,
+            List<IGetEmployeeDTO> getEmployees)
         {
+            _getEmployees = getEmployees;
             _employees = employees;
-            _departments = departments;               
+            _departments = departments;
+            _employeeModel = employeeModel;
+            _getEmployeeDTO = getEmployeeDTO;
+
         }
 
         [HttpGet]
@@ -34,12 +44,12 @@ namespace Employees_API.Controllers
                 try
                 {
                     var results = await _employees.GetAllAsync();
-                    
+
 
                     foreach (var employee in results)
                     {
 
-                        employee.GetDTO = new GetEmployeeDTO()
+                        _getEmployeeDTO = new GetEmployeeDTO()
                         {
                             Id = employee.Id,
                             Name = employee.Name,
@@ -48,10 +58,10 @@ namespace Employees_API.Controllers
                             IsAvailable = employee.IsAvailable,
                             DepartmentId = employee.DepartmentId,
                         };
-                        employees.Add(employee.GetDTO);
+                        _getEmployees.Add(_getEmployeeDTO);
                     }
-                    return Ok(new { success = true, employees = employees });
-                                      
+                    return Ok(new { success = true, employees = _getEmployees });
+
                 }
                 catch (CollectionIsEmptyException)
                 {
@@ -60,22 +70,21 @@ namespace Employees_API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {success = false,  message = $"Server Error {ex.Message}" });
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
         }
 
-        [HttpPost]  
-        public async Task<IActionResult> Post(AddEmployeeDTO Value)
+        [HttpPost]
+        public async Task<IActionResult> Post(IAddEmployeeDTO Value)
         {
 
-                try
-                {     
+            try
+            {
                 var dept = await _departments.GetById(Value.DepartmentId);
-                    if (dept is null)
-                        throw new ObjectIsNullException("The chosen department does not exist");
+                if (dept is null)
+                    throw new ObjectIsNullException("The chosen department does not exist");
 
-
-                Employee employee = new Employee()
+                _employeeModel = new Employee()
                 {
                     Name = Value.Name,
                     Email = Value.Email,
@@ -83,15 +92,16 @@ namespace Employees_API.Controllers
                     DepartmentId = Value.DepartmentId
                 };
 
-                    await _employees.AddAsync(employee);
-                    return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
 
-                 }
-                    catch(ObjectIsNullException ex)
-                  {
-                     return NotFound(new { success = false, message = ex.Message });
-                  }
+                await _employees.AddAsync(_employeeModel);
+                return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
+
             }
+            catch (ObjectIsNullException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -104,7 +114,7 @@ namespace Employees_API.Controllers
                     return Ok(new
                     {
                         success = true,
-                        employee = new GetEmployeeDTO()
+                        _getEmployeeDTO = new GetEmployeeDTO()
                         {
                             Id = result.Id,
                             Name = result.Name,
@@ -158,7 +168,7 @@ namespace Employees_API.Controllers
         }
 
         [HttpPut]
-        public Task<IActionResult> UpdateById(EditEmployeeDTO Value)
+        public Task<IActionResult> UpdateById(IEditEmployeeDTO Value)
         {
             throw new NotImplementedException();
         }
@@ -166,6 +176,6 @@ namespace Employees_API.Controllers
     }
 
 
-       
-    }
+
+}
 
