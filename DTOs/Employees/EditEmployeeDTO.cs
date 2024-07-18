@@ -2,7 +2,7 @@
 
 namespace Employees_API.DTOs.Employees
 {
-    public class EditEmployeeDTO
+    public class EditEmployeeDTO : IEditEmployeeDTO
     {
         public int Id { get; private set; }
 

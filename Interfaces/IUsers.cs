@@ -6,9 +6,9 @@ namespace Employees_API.Interfaces
 {
     public interface IUsers
     {
-        Task SignUpAsync(AddUserDTO user);
+        Task SignUpAsync(IAddUserDTO user);
 
-        Task<bool> LogInAsync(LoginUserDTO user);
+        Task<bool> LogInAsync(ILoginUserDTO user);
 
         Task LogOutAsync();
 

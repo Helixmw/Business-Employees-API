@@ -10,7 +10,7 @@ namespace Employees_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EmployeeRolesController : ControllerBase
+    public class EmployeeRolesController : ControllerBase, IEmployeeRolesController
     {
 
         IEmployeeRoles _employeeRoles;
@@ -18,14 +18,14 @@ namespace Employees_API.Controllers
         {
             _employeeRoles = employeeRoles;
         }
-       
+
         [HttpPost]
         public IActionResult AssignRole(int employeeId, int roleId)
         {
             try
             {
                 _employeeRoles.AssignRole(employeeId, roleId);
-                return Ok(new {success = true, message = "Employee role has been assigned"});
+                return Ok(new { success = true, message = "Employee role has been assigned" });
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace Employees_API.Controllers
             }
         }
 
-     
+
         [Route("{employeeId}/{oldRoleId}/{newRoleId}")]
         [HttpPut]
         public IActionResult ReAssignRole(int employeeId, int oldRoleId, int newRoleId)
@@ -49,7 +49,7 @@ namespace Employees_API.Controllers
             }
         }
 
-      
+
         [Route("{employeeId}/{roleId}")]
         [HttpDelete]
         public IActionResult RemoveEmployee(int employeeId, int roleId)
@@ -58,9 +58,10 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                _employeeRoles.RemoveEmployee(employeeId, roleId);
-                return Ok(new { success = true, message = "Employee role has been removed for the role" });
-                }catch(ObjectIsNullException ex)
+                    _employeeRoles.RemoveEmployee(employeeId, roleId);
+                    return Ok(new { success = true, message = "Employee role has been removed for the role" });
+                }
+                catch (ObjectIsNullException ex)
                 {
                     return Ok(new { success = false, message = $"{ex.Message}" });
 
@@ -73,9 +74,9 @@ namespace Employees_API.Controllers
         }
 
 
-       
 
-        
-        
+
+
+
     }
 }

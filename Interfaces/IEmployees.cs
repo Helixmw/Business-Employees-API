@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Employees_API.Interfaces
 {
-    public interface IEmployees : IBaseContext<Employee>
+    public interface IEmployees : IBaseContext<IEmployee>
     {
         void AssignDepartment(int employeeId, int departmentId);
 

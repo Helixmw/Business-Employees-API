@@ -2,7 +2,7 @@
 
 namespace Employees_API.DTOs.Users
 {
-    public class LoginUserDTO
+    public class LoginUserDTO : ILoginUserDTO
     {
         [Required(ErrorMessage = "Please enter your password")]
         public string? Password { get; set; }
