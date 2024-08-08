@@ -1,14 +1,32 @@
 ﻿using Employees_API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Employees_API.Data
+namespace Employees_API.Data;
+public interface IApplicationDBContext
 {
-    public interface IApplicationDBContext
+    DbSet<DepartmentRole> DepartmentRoles
     {
-        DbSet<DepartmentRole> DepartmentRoles { get; set; }
-        DbSet<Department> Departments { get; set; }
-        DbSet<Employee> Employees { get; set; }
-        DbSet<EmployeeRole> EmployeesRoles { get; set; }
-        DbSet<Role> Roles { get; set; }
+        get;
+        set;
+    }
+    DbSet<Department> Departments
+    {
+        get;
+        set;
+    }
+    DbSet<Role> EmployeeRoles
+    {
+        get;
+        set;
+    }
+    DbSet<IEmployee> Employees
+    {
+        get;
+        set;
+    }
+    DbSet<EmployeeRole> EmployeesRoles
+    {
+        get;
+        set;
     }
 }

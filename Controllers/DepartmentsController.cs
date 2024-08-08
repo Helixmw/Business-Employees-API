@@ -17,8 +17,8 @@ namespace Employees_API.Controllers
     public class DepartmentsController : ControllerBase, IController<IAddDepartmentDTO, IEditDepartmentDTO>, IDepartmentsController
     {
         IDepartments _departments;
-        readonly ApplicationDBContext dBContext;
-        public DepartmentsController(ApplicationDBContext applicationDBContext, IDepartments departments)
+        IApplicationDBContext dBContext;
+        public DepartmentsController(IApplicationDBContext applicationDBContext, IDepartments departments)
         {
             _departments = departments;
             dBContext = applicationDBContext;
@@ -35,7 +35,6 @@ namespace Employees_API.Controllers
                     {
                         _departments.Delete(result);
                         _departments.RemoveDeptEmployees(id);
-                        await dBContext.SaveChangesAsync();
                         return Ok(new { success = true, departments = $"Department was deleted." });
                     }
                     catch (ObjectDeleteException)
@@ -105,7 +104,7 @@ namespace Employees_API.Controllers
                 try
                 {
                     await _departments.AddAsync(new Department() { Name = Value.Name, Description = Value.Description });
-                    await dBContext.SaveChangesAsync();
+                   
                     return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
                 }
                 catch (AddDepartmentException ex)
@@ -126,8 +125,9 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    _departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description });
-                    await dBContext.SaveChangesAsync();
+                    _departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description },
+                    _departments.SaveDeptChanges);
+                    
                     return Ok(new { success = true, message = $"Successfully updated {Value.Name}" });
                 }
                 catch (UpdateDepartmentException ex)
@@ -136,6 +136,29 @@ namespace Employees_API.Controllers
                 }
             }
             catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
+            }
+        }
+
+        [HttpPut("{departmentId}")]
+        public async Task<IActionResult> RemoveDeptEmployees(int departmentId)
+        {
+            try
+            {
+                try
+                {
+                    _departments.RemoveDeptEmployees(departmentId);
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Delete all Employees from department"
+                    });
+                }catch(UpdateDepartmentException ex)
+                {
+                    return BadRequest(new { success = false, message = $"Something went wrong. Try again later {ex.Message}" });
+                }
+            }catch(Exception ex)
             {
                 return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
             }

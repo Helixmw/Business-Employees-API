@@ -29,19 +29,26 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    await _users.SignUpAsync(user);
-                    return Ok(new { success = true, message = "You have successfully signed up!" });
+                    try
+                    {
+                        await _users.SignUpAsync((AddUserDTO)user);
+                        return Ok(new { success = true, message = "You have successfully signed up!" });
+                    }
+                    catch (InvalidInputException ex)
+                    {
+                        return BadRequest(new { success = false, message = ex.Message, errors = ex.Errors });
+                    }
+
+
                 }
-                catch (InvalidInputException ex)
+                catch (Exception ex)
                 {
-                    return BadRequest(new { success = false, message = ex.Message, errors = ex.Errors });
+                    return StatusCode(500, ex.Message);
                 }
-
-
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
         }
 
@@ -53,7 +60,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var res = await _users.LogInAsync(user);
+                    var res = await _users.LogInAsync((LoginUserDTO)user);
                     if (res is true)
                         return Ok(new { success = true, message = "You have logged in" });
 
@@ -78,12 +85,19 @@ namespace Employees_API.Controllers
         {
             try
             {
-                await _users.LogOutAsync();
-                return Ok(new { success = true, message = "You have logged out" });
+                try
+                {
+                    await _users.LogOutAsync();
+                    return Ok(new { success = true, message = "You have logged out" });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, ex.Message);
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
         }
 

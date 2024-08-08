@@ -21,8 +21,9 @@ namespace Employees_API.Controllers
         IGetEmployeeDTO _getEmployeeDTO;
         List<IGetEmployeeDTO> _getEmployees;
 
-        public EmployeesController(ApplicationDBContext applicationDBContext,
-            IEmployees employees, IDepartments departments,
+        public EmployeesController(
+            IEmployees employees,
+            IDepartments departments,
             IEmployee employeeModel,
             IGetEmployeeDTO getEmployeeDTO,
             List<IGetEmployeeDTO> getEmployees)
@@ -80,26 +81,33 @@ namespace Employees_API.Controllers
 
             try
             {
-                var dept = await _departments.GetById(Value.DepartmentId);
-                if (dept is null)
-                    throw new ObjectIsNullException("The chosen department does not exist");
-
-                _employeeModel = new Employee()
+                try
                 {
-                    Name = Value.Name,
-                    Email = Value.Email,
-                    Address = Value.Address,
-                    DepartmentId = Value.DepartmentId
-                };
+                    var dept = await _departments.GetById(Value.DepartmentId);
+                    if (dept is null)
+                        throw new ObjectIsNullException("The chosen department does not exist");
+
+                    _employeeModel = new Employee()
+                    {
+                        Name = Value.Name,
+                        Email = Value.Email,
+                        Address = Value.Address,
+                        DepartmentId = Value.DepartmentId
+                    };
 
 
-                await _employees.AddAsync(_employeeModel);
-                return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
+                    await _employees.AddAsync(_employeeModel);
+                    return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
 
+                }
+                catch (ObjectIsNullException ex)
+                {
+                    return NotFound(new { success = false, message = ex.Message });
+                }
             }
-            catch (ObjectIsNullException ex)
+            catch (Exception ex)
             {
-                return NotFound(new { success = false, message = ex.Message });
+                return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
         }
 

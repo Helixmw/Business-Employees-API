@@ -17,6 +17,12 @@ namespace Employees_API.Utilities
         {
             var employees = await _dbContext.Employees.Where(x => x.DepartmentId == departmentId).ToListAsync();
             _dbContext.Employees.RemoveRange(employees);
+            _dbContext.SaveChanges();
+        }
+
+        public void SaveDeptChanges()
+        {
+            _dbContext.SaveChanges();
         }
 
 

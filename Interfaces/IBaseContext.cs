@@ -3,12 +3,12 @@
     public interface IBaseContext<T> where T : class
     {
         
-        Task AddAsync(T Value);
+        Task AddAsync(T Value, Action? Save = null);
 
         Task<IEnumerable<T>> GetAllAsync();
 
         Task<T> GetById(int id);
-        void Update(T Value);
+        void Update(T Value, Action? Save = null);
 
         void Delete(T Value);
     }

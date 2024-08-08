@@ -1,6 +1,6 @@
 ﻿namespace Employees_API.Models
 {
-    public class Task : IModel
+    public class Tasking : IModel
     {
 
     }

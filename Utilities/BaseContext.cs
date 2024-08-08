@@ -16,10 +16,16 @@ namespace Employees_API.Utilities
             this.DbSet = DbSet;
             _dbContext = dBContext;
         }
-        public async Task AddAsync(T Value)
+        public async Task AddAsync(T Value, Action? Save = null)
         {
             await DbSet.AddAsync(Value);
-            await _dbContext.SaveChangesAsync();
+            if (Save == null)
+                await _dbContext.SaveChangesAsync();
+
+            else
+                Save();
+
+            
 
         }
 
@@ -46,9 +52,10 @@ namespace Employees_API.Utilities
         }
 
 
-        public void Update(T Value)
+        public void Update(T Value, Action? Save = null)
         {
             DbSet.Update(Value);
+            Save();
         }
     }
 }
