@@ -8,7 +8,7 @@ namespace Employees_API.Controllers
         Task<IActionResult> DeleteById(int id);
         Task<IActionResult> Get();
         Task<IActionResult> GetById(int id);
-        Task<IActionResult> Post(IAddDepartmentDTO Value);
-        Task<IActionResult> UpdateById([FromBody] IEditDepartmentDTO Value);
+        Task<IActionResult> Post(AddDepartmentDTO Value);
+        Task<IActionResult> UpdateById([FromBody] EditDepartmentDTO Value);
     }
 }

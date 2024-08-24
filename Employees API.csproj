@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Employees_API</RootNamespace>
+    <UserSecretsId>4d5f2c82-fa47-4dbc-9797-95a43aa73aa9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

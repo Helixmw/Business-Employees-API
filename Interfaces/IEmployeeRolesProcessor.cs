@@ -4,7 +4,7 @@ using Employees_API.Models;
 
 namespace Employees_API.Interfaces
 {
-    public interface IEmployeeRoles
+    public interface IEmployeeRolesProcessor
     {
         void AssignRole(int employeeId, int roleId);
 

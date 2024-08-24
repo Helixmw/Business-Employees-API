@@ -5,11 +5,11 @@ namespace Employees_API.Controllers
 {
     public interface IEmployeesController
     {
-        IActionResult AssignDept(int employeeId, int departmentId);
+        Task<IActionResult> AssignDept(int employeeId, int departmentId);
         Task<IActionResult> DeleteById(int id);
         Task<IActionResult> Get();
         Task<IActionResult> GetById(int id);
-        Task<IActionResult> Post(IAddEmployeeDTO Value);
-        Task<IActionResult> UpdateById(IEditEmployeeDTO Value);
+        Task<IActionResult> Post(AddEmployeeDTO Value);
+        Task<IActionResult> UpdateById(EditEmployeeDTO Value);
     }
 }

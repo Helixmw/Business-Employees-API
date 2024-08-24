@@ -7,6 +7,6 @@ namespace Employees_API.Controllers
     {
         Task<IActionResult> Login(ILoginUserDTO user);
         Task<IActionResult> Logout();
-        Task<IActionResult> SignUp([FromBody] IAddUserDTO user);
+        Task<IActionResult> SignUp([FromBody] AddUserDTO user);
     }
 }

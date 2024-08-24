@@ -28,17 +28,17 @@ builder.Services.AddScoped<UserManager<IdentityUser>>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
-builder.Services.AddScoped<IEmployee, Employee>();
-builder.Services.AddScoped<IEmployees, Employees>();
-builder.Services.AddScoped<IDepartments, Departments>();
-builder.Services.AddScoped<IEmployeeRoles, EmployeeRoles>();
+//builder.Services.AddScoped<IEmployee, Employee>();
+builder.Services.AddScoped<IEmployeesProcessor, EmployeesProcessor>();
+builder.Services.AddScoped<IDepartmentsProcessor, DepartmentsProcessor>();
+builder.Services.AddScoped<IEmployeeRolesProcessor, EmployeeRolesProcessor>();
 builder.Services.AddScoped<IGetEmployeeDTO, GetEmployeeDTO>();
 builder.Services.AddScoped<IAddEmployeeDTO, AddEmployeeDTO>();
 builder.Services.AddScoped<IAddUserDTO, AddUserDTO>();
 builder.Services.AddScoped<ILoginUserDTO, LoginUserDTO>();
 builder.Services.AddScoped<IAddDepartmentDTO, AddDepartmentDTO>();
 builder.Services.AddScoped<IEditDepartmentDTO, EditDepartmentDTO>();
-builder.Services.AddScoped<IUsers, Users>();
+builder.Services.AddScoped<IUsersProcessor, UserProcessor>();
                 
 
 var app = builder.Build();
