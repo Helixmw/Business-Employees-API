@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Employees_API.Interfaces
 {
-    public interface IDepartments : IBaseContext<Department>
+    public interface IDepartmentsProcessor : IBaseContext<Department>
     {
-        void RemoveDeptEmployees(int departmentId);
+        void RemoveDeptEmployees(Department dept);
 
         void SaveDeptChanges();
 

@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Employees_API.Utilities
 {
-    public class DepartmentRoles
+    public class DepartmentRolesProcessor
     {
         private readonly ApplicationDBContext applicationDBContext;
 
-        public DepartmentRoles(ApplicationDBContext applicationDBContext)
+        public DepartmentRolesProcessor(ApplicationDBContext applicationDBContext)
         {
             this.applicationDBContext = applicationDBContext;
         }

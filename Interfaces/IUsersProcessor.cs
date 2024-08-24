@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Employees_API.Interfaces
 {
-    public interface IUsers
+    public interface IUsersProcessor
     {
         Task SignUpAsync(AddUserDTO user);
 

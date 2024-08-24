@@ -14,15 +14,64 @@ namespace Employees_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DepartmentsController : ControllerBase, IController<IAddDepartmentDTO, IEditDepartmentDTO>, IDepartmentsController
+    public class DepartmentsController : ControllerBase, IController<AddDepartmentDTO, EditDepartmentDTO>, IDepartmentsController
     {
-        IDepartments _departments;
-        IApplicationDBContext dBContext;
-        public DepartmentsController(IApplicationDBContext applicationDBContext, IDepartments departments)
+        readonly IDepartmentsProcessor _departmentsProcessor;
+       
+        public DepartmentsController(IDepartmentsProcessor departmentsProcessor)
         {
-            _departments = departments;
-            dBContext = applicationDBContext;
+            _departmentsProcessor = departmentsProcessor;
+            
         }
+
+        //Create New Department
+        [Route("Create")]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] AddDepartmentDTO Value)
+        {
+            try
+            {
+                try
+                {
+                    await _departmentsProcessor.AddAsync(new Department() { Name = Value.Name, Description = Value.Description });
+                   
+                    return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
+                }
+                catch (AddDepartmentException ex)
+                {
+                    return BadRequest(new { success = false, message = $"Something went wrong. Try again later {ex.Message}" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
+            }
+        }
+       
+        //List All Departments
+        [Route("List")]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                try
+                {
+                    var results = await _departmentsProcessor.GetAllAsync();
+                    return Ok(new { success = true, departments = results });
+                }
+                catch (CollectionIsEmptyException)
+                {
+                    return NotFound(new { success = false, message = "No departments were found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
+            }
+        }
+
+        //Delete Department and Associated Employees
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteById(int id)
         {
@@ -30,11 +79,11 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var result = await _departments.GetById(id);
+                    var result = await _departmentsProcessor.GetById(id);
                     try
                     {
-                        _departments.Delete(result);
-                        _departments.RemoveDeptEmployees(id);
+                        
+                        _departmentsProcessor.RemoveDeptEmployees(result);
                         return Ok(new { success = true, departments = $"Department was deleted." });
                     }
                     catch (ObjectDeleteException)
@@ -52,28 +101,8 @@ namespace Employees_API.Controllers
                 return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
             }
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            try
-            {
-                try
-                {
-                    var results = await _departments.GetAllAsync();
-                    return Ok(new { success = true, departments = results });
-                }
-                catch (CollectionIsEmptyException)
-                {
-                    return NotFound(new { success = false, message = "No departments were found" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
-            }
-        }
-
+ 
+        //Get Department by Id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -81,7 +110,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var result = await _departments.GetById(id);
+                    var result = await _departmentsProcessor.GetById(id);
                     return Ok(new { success = true, department = result });
                 }
                 catch (ObjectIsNullException)
@@ -95,38 +124,16 @@ namespace Employees_API.Controllers
             }
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> Post(IAddDepartmentDTO Value)
-        {
-            try
-            {
-                try
-                {
-                    await _departments.AddAsync(new Department() { Name = Value.Name, Description = Value.Description });
-                   
-                    return Ok(new { success = true, message = $"Successfully added {Value.Name}" });
-                }
-                catch (AddDepartmentException ex)
-                {
-                    return BadRequest(new { success = false, message = $"Something went wrong. Try again later {ex.Message}" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = $"Server Error : {ex.Message}" });
-            }
-        }
-
+        //Update Department by Id
         [HttpPut]
-        public async Task<IActionResult> UpdateById([FromBody] IEditDepartmentDTO Value)
+        public async Task<IActionResult> UpdateById([FromBody] EditDepartmentDTO Value)
         {
             try
             {
                 try
                 {
-                    _departments.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description },
-                    _departments.SaveDeptChanges);
+                    _departmentsProcessor.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description },
+                    _departmentsProcessor.SaveDeptChanges);
                     
                     return Ok(new { success = true, message = $"Successfully updated {Value.Name}" });
                 }
@@ -141,14 +148,15 @@ namespace Employees_API.Controllers
             }
         }
 
+        //Empty Department Employees
         [HttpPut("{departmentId}")]
-        public async Task<IActionResult> RemoveDeptEmployees(int departmentId)
+        public async Task<IActionResult> RemoveDeptEmployees([FromBody] GetDepartmentDTO dept)
         {
             try
             {
                 try
                 {
-                    _departments.RemoveDeptEmployees(departmentId);
+                    _departmentsProcessor.RemoveDeptEmployees(new Department { Id = dept.Id, Name = dept.Name, Description = dept.Description});
                     return Ok(new
                     {
                         success = true,

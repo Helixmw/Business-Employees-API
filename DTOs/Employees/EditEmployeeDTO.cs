@@ -4,7 +4,7 @@ namespace Employees_API.DTOs.Employees
 {
     public class EditEmployeeDTO : IEditEmployeeDTO
     {
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please provide Employee Name")]
         public string? Name { get; set; }

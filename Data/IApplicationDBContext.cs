@@ -19,7 +19,7 @@ public interface IApplicationDBContext
         get;
         set;
     }
-    DbSet<IEmployee> Employees
+    DbSet<Employee> Employees
     {
         get;
         set;

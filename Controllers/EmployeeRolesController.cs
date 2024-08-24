@@ -13,10 +13,10 @@ namespace Employees_API.Controllers
     public class EmployeeRolesController : ControllerBase, IEmployeeRolesController
     {
 
-        IEmployeeRoles _employeeRoles;
-        public EmployeeRolesController(IEmployeeRoles employeeRoles)
+        readonly IEmployeeRolesProcessor _employeeRolesProcessor;
+        public EmployeeRolesController(IEmployeeRolesProcessor employeeRolesProcessor)
         {
-            _employeeRoles = employeeRoles;
+            _employeeRolesProcessor = employeeRolesProcessor;
         }
 
         [HttpPost]
@@ -24,7 +24,7 @@ namespace Employees_API.Controllers
         {
             try
             {
-                _employeeRoles.AssignRole(employeeId, roleId);
+                _employeeRolesProcessor.AssignRole(employeeId, roleId);
                 return Ok(new { success = true, message = "Employee role has been assigned" });
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Employees_API.Controllers
         {
             try
             {
-                _employeeRoles.ReAssignRole(employeeId, oldRoleId, newRoleId);
+                _employeeRolesProcessor.ReAssignRole(employeeId, oldRoleId, newRoleId);
                 return Ok(new { success = true, message = "Employee has been assigned a new role" });
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    _employeeRoles.RemoveEmployee(employeeId, roleId);
+                    _employeeRolesProcessor.RemoveEmployee(employeeId, roleId);
                     return Ok(new { success = true, message = "Employee role has been removed for the role" });
                 }
                 catch (ObjectIsNullException ex)

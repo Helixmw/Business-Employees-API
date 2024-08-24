@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Employees_API.Utilities
 {
-    public class EmployeeRoles : IEmployeeRoles
+    public class EmployeeRolesProcessor : IEmployeeRolesProcessor
     {
         private readonly ApplicationDBContext applicationDBContext;
 
-        public EmployeeRoles(ApplicationDBContext applicationDBContext)
+        public EmployeeRolesProcessor(ApplicationDBContext applicationDBContext)
         {
             this.applicationDBContext = applicationDBContext;
         }

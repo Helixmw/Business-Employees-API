@@ -11,19 +11,19 @@ namespace Employees_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class UserController : ControllerBase, IUserController
     {
-        IUsers _users;
+        readonly IUsersProcessor _usersProcessor;
 
-        public UserController(IUsers users)
+        public UserController(IUsersProcessor usersProcessor)
         {
-            _users = users;
+            _usersProcessor = usersProcessor;
         }
 
         [Route("SignUp")]
         [HttpPost]
-        public async Task<IActionResult> SignUp([FromBody] IAddUserDTO user)
+        public async Task<IActionResult> SignUp([FromBody] AddUserDTO user)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Employees_API.Controllers
                 {
                     try
                     {
-                        await _users.SignUpAsync((AddUserDTO)user);
+                        await _usersProcessor.SignUpAsync((AddUserDTO)user);
                         return Ok(new { success = true, message = "You have successfully signed up!" });
                     }
                     catch (InvalidInputException ex)
@@ -51,7 +51,7 @@ namespace Employees_API.Controllers
                 return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
             }
         }
-
+        
         [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login(ILoginUserDTO user)
@@ -60,7 +60,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    var res = await _users.LogInAsync((LoginUserDTO)user);
+                    var res = await _usersProcessor.LogInAsync((LoginUserDTO)user);
                     if (res is true)
                         return Ok(new { success = true, message = "You have logged in" });
 
@@ -78,8 +78,9 @@ namespace Employees_API.Controllers
             }
         }
 
-        [Route("Logout")]
 
+        [Authorize]
+        [Route("Logout")]
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
@@ -87,7 +88,7 @@ namespace Employees_API.Controllers
             {
                 try
                 {
-                    await _users.LogOutAsync();
+                    await _usersProcessor.LogOutAsync();
                     return Ok(new { success = true, message = "You have logged out" });
                 }
                 catch (Exception ex)

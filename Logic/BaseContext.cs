@@ -29,9 +29,10 @@ namespace Employees_API.Utilities
 
         }
 
-        public void Delete(T Value)
+        public async void Delete(T Value)
         {
             DbSet.Remove(Value);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()

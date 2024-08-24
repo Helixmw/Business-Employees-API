@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Employees_API.Utilities
 {
-    public class Users : IUsers
+    public class UserProcessor : IUsersProcessor
     {
         public readonly UserManager<IdentityUser> UserManager;
         public readonly SignInManager<IdentityUser> SignInManager;
-        public Users(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UserProcessor(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
