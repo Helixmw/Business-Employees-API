@@ -13,6 +13,4 @@ Written files are in the following directories for review.
 - Models
 - Logic
 
-Unit Tests: EmployeesAPI.Test
-
 Entry: Program.cs
