@@ -10,6 +10,6 @@ namespace Employees_API.Controllers
         Task<IActionResult> Get();
         Task<IActionResult> GetById(int id);
         Task<IActionResult> Post(AddEmployeeDTO Value);
-        Task<IActionResult> UpdateById(EditEmployeeDTO Value);
+        Task<IActionResult> Update(EditEmployeeDTO Value);
     }
 }

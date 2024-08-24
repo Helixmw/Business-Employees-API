@@ -7,7 +7,7 @@ namespace Employees_API.Interfaces
     {
         void RemoveDeptEmployees(Department dept);
 
-        void SaveDeptChanges();
+        Task UpdateDepartmentAsync(Department dept);
 
 
     }

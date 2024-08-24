@@ -9,6 +9,6 @@ namespace Employees_API.Controllers
         Task<IActionResult> Get();
         Task<IActionResult> GetById(int id);
         Task<IActionResult> Post(AddDepartmentDTO Value);
-        Task<IActionResult> UpdateById([FromBody] EditDepartmentDTO Value);
+        Task<IActionResult> Update(EditDepartmentDTO Value);
     }
 }
