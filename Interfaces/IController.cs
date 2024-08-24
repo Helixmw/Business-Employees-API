@@ -17,6 +17,8 @@ namespace Employees_API.Interfaces
         Task<IActionResult> DeleteById(int id);
 
         [HttpPut]
-        Task<IActionResult> UpdateById(U Value);
+        Task<IActionResult> Update(U Value);
+
+
     }
 }

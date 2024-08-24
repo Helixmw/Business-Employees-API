@@ -142,7 +142,7 @@ namespace Employees_API.Controllers
         //Update Employee Info
         [Route("Update")]
         [HttpPut]
-        public async Task<IActionResult> UpdateById(EditEmployeeDTO Value)
+        public async Task<IActionResult> Update(EditEmployeeDTO Value)
         {
             try
             {

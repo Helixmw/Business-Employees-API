@@ -53,10 +53,10 @@ namespace Employees_API.Utilities
         }
 
 
-        public void Update(T Value, Action? Save = null)
+        public void Update(T Value)
         {
             DbSet.Update(Value);
-            Save();
+          
         }
     }
 }

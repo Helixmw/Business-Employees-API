@@ -126,15 +126,13 @@ namespace Employees_API.Controllers
 
         //Update Department by Id
         [HttpPut]
-        public async Task<IActionResult> UpdateById([FromBody] EditDepartmentDTO Value)
+        public async Task<IActionResult> Update([FromBody] EditDepartmentDTO Value)
         {
             try
             {
                 try
-                {
-                    _departmentsProcessor.Update(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description },
-                    _departmentsProcessor.SaveDeptChanges);
-                    
+                {                
+                    await _departmentsProcessor.UpdateDepartmentAsync(new Department() { Id = Value.Id, Name = Value.Name, Description = Value.Description });                               
                     return Ok(new { success = true, message = $"Successfully updated {Value.Name}" });
                 }
                 catch (UpdateDepartmentException ex)

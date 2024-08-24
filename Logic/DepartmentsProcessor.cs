@@ -25,10 +25,16 @@ namespace Employees_API.Utilities
                 _dbContext.SaveChanges();
         }
 
-        public void SaveDeptChanges()
+        public async Task UpdateDepartmentAsync(Department dept)
         {
-            _dbContext.SaveChanges();
+            var result = await this.GetById(dept.Id);
+
+            result.Name = dept.Name;
+            result.Description = dept.Description;
+            await _dbContext.SaveChangesAsync();
         }
+
+       
 
 
     }
