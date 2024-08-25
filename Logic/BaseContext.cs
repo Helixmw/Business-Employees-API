@@ -51,6 +51,7 @@ namespace Employees_API.Utilities
                 throw new ObjectIsNullException();
             return result;
         }
+     
 
 
         public void Update(T Value)
@@ -58,5 +59,6 @@ namespace Employees_API.Utilities
             DbSet.Update(Value);
           
         }
+
     }
 }

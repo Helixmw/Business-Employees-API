@@ -2,7 +2,7 @@
 
 namespace Employees_API.Models
 {
-    public class DepartmentRole : IModel
+    public class DepartmentRole : IDepartmentRole
     {
         public int Id { get; set; }
         public int DepartmentId { get; set; }
