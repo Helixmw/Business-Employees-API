@@ -9,7 +9,8 @@ namespace Employees_API.Controllers;
 [ApiController]
 public class RolesController : ControllerBase, IRolesController
 {
-   readonly IRolesProcessor _rolesProcessor;
+
+    readonly IRolesProcessor _rolesProcessor;
 
     public RolesController(IRolesProcessor rolesProcessor)
     {
@@ -20,13 +21,15 @@ public class RolesController : ControllerBase, IRolesController
         try
         {
             await _rolesProcessor.AddAsync(roleDTO);
-            return Ok(new { success = true, message = $"Successfully add new role {roleDTO.Name}" });
+
+            return Ok(new { success = true, message = $"Added new role {roleDTO.Name}" });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new {success = false, message = ex.Message });
+            return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}"});
         }
     }
+
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -34,16 +37,16 @@ public class RolesController : ControllerBase, IRolesController
             try
             {
                 await _rolesProcessor.DeleteAsync(id);
-                return Ok(new { success = true, message = "Role has been deleted." });
+                return Ok(new { success = true, message = "Role has been deleted" });
             }
             catch (ObjectIsNullException)
-            {
-                return NotFound(new { success = true, message = "Role was not found." });
-            }
+                {
+                    return NotFound(new { success = false, message = "Role was not found" });
+                }
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new {success = false, message = ex.Message });
+            return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
         }
     }
     public async Task<IActionResult> Edit(EditRoleDTO roleDTO)
@@ -52,19 +55,17 @@ public class RolesController : ControllerBase, IRolesController
         {
             try
             {
-               await _rolesProcessor.EditAsync(roleDTO);
-                return Ok(new { success = true, message = $"Successfully updated {roleDTO.Name}" });
+                await _rolesProcessor.EditAsync(roleDTO);
+                return Ok(new { success = true, message = $"Updated role {roleDTO.Name}" });
             }
             catch (ObjectIsNullException)
             {
-                return NotFound(new { success = true, message = "Role was not found." });
-
+                return NotFound(new { success = false, message = "Role was not found" });
             }
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new {success = false, message = ex.Message });
-
+            return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
         }
     }
 }

@@ -20,10 +20,7 @@ namespace Employees_API.Models
 
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
-
-        public Department Department { get; set; }
-
-
+        public Department Department { get; set; } = null!;
 
         
 

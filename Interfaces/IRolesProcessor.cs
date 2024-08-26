@@ -4,11 +4,10 @@ namespace Employees_API.Interfaces
 {
     public interface IRolesProcessor
     {
-        Task AddAsync(AddRoleDTO Value);
+        Task AddAsync(AddRoleDTO roleDTO);
 
-        Task EditAsync(EditRoleDTO Value);
+        Task EditAsync(EditRoleDTO roleDTO);
 
-        Task DeleteAsync(int RoleId);   
-
+        Task DeleteAsync(int id);
     }
 }

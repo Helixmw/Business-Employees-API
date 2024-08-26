@@ -40,21 +40,21 @@ namespace Employees_API.Utilities
             CheckDepartmentAndRole(departmentId, oldRoleId);
             CheckNewRole(newRoleId);
             var result = await CheckAssignedRole(departmentId, oldRoleId);
-            result.Id = newRoleId;
+            result.RoleId = newRoleId;
             await applicationDBContext.SaveChangesAsync();
         }
 
         public async void CheckNewRole(int newRoleId)
         {
-            var role = await applicationDBContext.EmployeesRoles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
+            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
             if (role is null)
                 throw new ObjectIsNullException("This role does not exist");
         }
 
-        public async Task<Role> CheckAssignedRole(int departmentId, int roleId)
+        public async Task<DepartmentRole> CheckAssignedRole(int departmentId, int roleId)
         {
             var deptRole = await applicationDBContext.DepartmentRoles.Where(x => x.DepartmentId == departmentId)
-                 .Where(x => x.Id == roleId).FirstOrDefaultAsync();
+                 .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();
             if (deptRole is null)
                 throw new ObjectIsNullException("This role does not exit under this department");
 
@@ -67,7 +67,7 @@ namespace Employees_API.Utilities
             if (department is null)
                 throw new ObjectIsNullException("This department does not exist");
 
-            var role = await applicationDBContext.EmployeesRoles.Where(x => x.Id == roleId).FirstOrDefaultAsync();
+            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == roleId).FirstOrDefaultAsync();
             if (role is null)
                 throw new ObjectIsNullException("This role was not found");
         }

@@ -7,24 +7,25 @@ namespace Employees_API.Utilities
 {
     public class RolesProcessor : BaseContext<Role>, IRolesProcessor
     {
-        public RolesProcessor(ApplicationDBContext applicationDBContext) : base(applicationDBContext.DepartmentRoles, applicationDBContext)
+        public RolesProcessor(ApplicationDBContext applicationDBContext) : base(applicationDBContext.EmployeeRoles, applicationDBContext)
         {
-            
+
         }
 
-        public async Task AddAsync(AddRoleDTO Value)
+        public async Task AddAsync(AddRoleDTO roleDTO)
         {
-            await this.AddAsync(Value);
+            await this.AddAsync(roleDTO);
         }
-        public async Task DeleteAsync(int RoleId)
+        public async Task EditAsync(EditRoleDTO roleDTO)
         {
-            await this.GetById(RoleId);
-            await this.DeleteAsync(RoleId);
+            await this.GetById(roleDTO.Id);
+            await this.EditAsync(roleDTO);
         }
-        public async Task EditAsync(EditRoleDTO Value)
+        
+        public async Task DeleteAsync(int id)
         {
-            await this.GetById(Value.Id);
-            await this.EditAsync(Value);
+            await this.GetById(id);
+            await this.DeleteAsync(id);
         }
     }
 }
