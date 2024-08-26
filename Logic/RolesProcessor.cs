@@ -1,6 +1,8 @@
 ﻿using Employees_API.Data;
 using Employees_API.Interfaces;
 using Employees_API.Models;
+using Employees_API.DTOs.Roles;
+
 
 namespace Employees_API.Utilities
 {
@@ -8,7 +10,6 @@ namespace Employees_API.Utilities
     {
         public RolesProcessor(ApplicationDBContext applicationDBContext) : base(applicationDBContext.EmployeeRoles, applicationDBContext)
         {
-<<<<<<< HEAD
 
         }
 
@@ -26,9 +27,7 @@ namespace Employees_API.Utilities
         {
             await this.GetById(id);
             await this.DeleteAsync(id);
-=======
 
->>>>>>> efa45306edcdb9ba95c71256745bb5f585e22c79
         }
     }
 }
