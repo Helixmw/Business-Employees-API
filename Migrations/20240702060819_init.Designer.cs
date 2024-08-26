@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Employees_API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240825112956_init")]
+    [Migration("20240702060819_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -43,6 +43,25 @@ namespace Employees_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("Employees_API.Models.DepartmentRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DepartmentRoles");
                 });
 
             modelBuilder.Entity("Employees_API.Models.Employee", b =>
@@ -107,7 +126,7 @@ namespace Employees_API.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -115,7 +134,7 @@ namespace Employees_API.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("DepartmentRoles");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
