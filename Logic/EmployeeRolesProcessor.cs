@@ -6,26 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Employees_API.Utilities
 {
-    public class EmployeeRolesProcessor : BaseContext<DepartmentRole>, IEmployeeRolesProcessor
+    public class EmployeeRolesProcessor : BaseContext<EmployeeRole>, IEmployeeRolesProcessor
     {
         private readonly ApplicationDBContext applicationDBContext;
 
-        public EmployeeRolesProcessor(ApplicationDBContext applicationDBContext):base(applicationDBContext.DepartmentRoles, applicationDBContext)
+        public EmployeeRolesProcessor(ApplicationDBContext applicationDBContext):base(applicationDBContext.EmployeesRoles, applicationDBContext)
         {
             this.applicationDBContext = applicationDBContext;
         }
 
-        public async void AssignRole(int employeeId, int roleId)
+        public async Task AssignRole(int employeeId, int roleId)
         {
             CheckEmployeeAndRole(employeeId, roleId);
-            var employeeRole = new EmployeeRole()
-            {
-                EmployeeId = employeeId,
-                RoleId = roleId
-            };
-            applicationDBContext.EmployeesRoles.Add(employeeRole);
-            await applicationDBContext.SaveChangesAsync();
-
+            var employeeRole = new EmployeeRole() { EmployeeId = employeeId, RoleId = roleId };
+            await this.AddAsync(employeeRole);
         }
 
         public async void ReAssignRole(int employeeId, int oldRoleId, int newRoleId)
@@ -33,21 +27,17 @@ namespace Employees_API.Utilities
             CheckNewRole(newRoleId);
             var role = await CheckOldRole(employeeId, oldRoleId);
             role.RoleId = newRoleId;
-            applicationDBContext.EmployeesRoles.Update(role);
-            await applicationDBContext.SaveChangesAsync();
-
+            this.Update(role);
         }
 
 
-        public async void RemoveEmployee(int employeeId, int roleId)
+        public async Task RemoveEmployee(int employeeId, int roleId)
         {
             CheckEmployeeAndRole(employeeId, roleId);
-            var result = await applicationDBContext.EmployeesRoles.Where(x => x.EmployeeId == employeeId)
-                   .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();
+            var result = await GetEmployeeWithRole(employeeId, roleId);
             if (result is not null)
             {
-                applicationDBContext.EmployeesRoles.Remove(result);
-                await applicationDBContext.SaveChangesAsync();
+                this.Delete(result);
             }
 
             else
@@ -56,22 +46,14 @@ namespace Employees_API.Utilities
 
         public async void CheckNewRole(int newRoleId)
         {
-            var role = await this.GetById(newRoleId);
-          
+            var role = await this.GetById(newRoleId);          
         }
 
 
         public async Task<EmployeeRole> CheckOldRole(int employeeId, int oldRoleId)
         {
-            var employee = await applicationDBContext.Employees.Where(x => x.Id == employeeId).FirstOrDefaultAsync();
-            if (employee is null)
-                throw new ObjectIsNullException("This employee was not found");
-
-            var role = await applicationDBContext.EmployeesRoles.Where(x => x.RoleId == oldRoleId)
-                 .Where(x => x.EmployeeId == employeeId).FirstOrDefaultAsync();
-            if (role is null)
-                throw new ObjectIsNullException("This role was never assigned to this employee");
-
+            await FindEmployee(employeeId);
+            var role = await CheckRoleAssignedToEmployee(oldRoleId, employeeId);
             return role;
 
         }
@@ -79,18 +61,32 @@ namespace Employees_API.Utilities
 
         public async void CheckEmployeeAndRole(int employeeId, int roleId)
         {
-            var employee = await FindEmployee(employeeId);
+            await FindEmployee(employeeId);
             var role = await this.GetById(roleId);
             
         }
 
-        private async Task<Employee> FindEmployee(int id)
+        public async Task<EmployeeRole> GetEmployeeWithRole(int employeeId, int roleId)
+        { 
+                var result = await applicationDBContext.EmployeesRoles.Where(x => x.EmployeeId == employeeId)
+                     .Where(x => x.RoleId == roleId).FirstOrDefaultAsync();          
+                return result;        
+        }
+
+        public async Task<EmployeeRole> CheckRoleAssignedToEmployee(int oldRoleId, int employeeId)
+        {
+            var role = await applicationDBContext.EmployeesRoles.Where(x => x.RoleId == oldRoleId)
+                .Where(x => x.EmployeeId == employeeId).FirstOrDefaultAsync();
+            if (role is null)
+                throw new ObjectIsNullException("This role was never assigned to this employee");
+            return role;
+        }
+
+        private async Task FindEmployee(int id)
         {
             var employee = await applicationDBContext.Employees.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (employee is null)
                 throw new ObjectIsNullException("This employee was not found");
-
-            return employee;
         }
 
 

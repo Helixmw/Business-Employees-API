@@ -42,25 +42,6 @@ namespace Employees_API.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("Employees_API.Models.DepartmentRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DepartmentRoles");
-                });
-
             modelBuilder.Entity("Employees_API.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -123,7 +104,7 @@ namespace Employees_API.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoleName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -131,7 +112,7 @@ namespace Employees_API.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("EmployeeRoles");
+                    b.ToTable("DepartmentRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

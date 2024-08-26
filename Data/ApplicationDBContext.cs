@@ -21,7 +21,7 @@ namespace Employees_API.Data
             get; set;
         }
 
-        public DbSet<Role> EmployeeRoles
+        public DbSet<Role> DepartmentRoles
         {
             get; set;
         }
@@ -31,9 +31,5 @@ namespace Employees_API.Data
             get; set;
         }
 
-        public DbSet<DepartmentRole> DepartmentRoles
-        {
-            get; set;
-        }
     }
 }

@@ -4,17 +4,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Employees_API.Data;
 public interface IApplicationDBContext
 {
-    DbSet<DepartmentRole> DepartmentRoles
-    {
-        get;
-        set;
-    }
+   
     DbSet<Department> Departments
     {
         get;
         set;
     }
-    DbSet<Role> EmployeeRoles
+    DbSet<Role> DepartmentRoles
     {
         get;
         set;

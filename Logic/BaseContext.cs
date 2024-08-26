@@ -57,7 +57,8 @@ namespace Employees_API.Utilities
         public void Update(T Value)
         {
             DbSet.Update(Value);
-          
+            Task.Run(() => _dbContext.SaveChangesAsync());
+
         }
 
     }

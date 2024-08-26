@@ -8,12 +8,11 @@ namespace Employees_API.Models
     {
 
         public int Id { get; set; }
-        public string RoleName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
-        public Department Department { get; set; } = null!;
-        ICollection<Employee>? Employees { get; set; }
+        public Department Department { get; set; }
 
 
     }
