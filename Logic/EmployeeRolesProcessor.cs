@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Employees_API.Utilities
 {
-    public class EmployeeRolesProcessor : IEmployeeRolesProcessor
+    public class EmployeeRolesProcessor : BaseContext<DepartmentRole>, IEmployeeRolesProcessor
     {
         private readonly ApplicationDBContext applicationDBContext;
 
-        public EmployeeRolesProcessor(ApplicationDBContext applicationDBContext)
+        public EmployeeRolesProcessor(ApplicationDBContext applicationDBContext):base(applicationDBContext.DepartmentRoles, applicationDBContext)
         {
             this.applicationDBContext = applicationDBContext;
         }
@@ -56,9 +56,8 @@ namespace Employees_API.Utilities
 
         public async void CheckNewRole(int newRoleId)
         {
-            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == newRoleId).FirstOrDefaultAsync();
-            if (role is null)
-                throw new ObjectIsNullException("This role was not found");
+            var role = await this.GetById(newRoleId);
+          
         }
 
 
@@ -80,14 +79,20 @@ namespace Employees_API.Utilities
 
         public async void CheckEmployeeAndRole(int employeeId, int roleId)
         {
-            var employee = await applicationDBContext.Employees.Where(x => x.Id == employeeId).FirstOrDefaultAsync();
+            var employee = await FindEmployee(employeeId);
+            var role = await this.GetById(roleId);
+            
+        }
+
+        private async Task<Employee> FindEmployee(int id)
+        {
+            var employee = await applicationDBContext.Employees.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (employee is null)
                 throw new ObjectIsNullException("This employee was not found");
 
-            var role = await applicationDBContext.EmployeeRoles.Where(x => x.Id == roleId).FirstOrDefaultAsync();
-            if (role is null)
-                throw new ObjectIsNullException("This role was not found");
+            return employee;
         }
+
 
     }
 }
