@@ -26,7 +26,7 @@ public class RolesController : ControllerBase, IRolesController
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}"});
+            return StatusCode(500, new { success = false, message = $"Server Error {ex.Message}" });
         }
     }
 
@@ -40,9 +40,9 @@ public class RolesController : ControllerBase, IRolesController
                 return Ok(new { success = true, message = "Role has been deleted" });
             }
             catch (ObjectIsNullException)
-                {
-                    return NotFound(new { success = false, message = "Role was not found" });
-                }
+            {
+                return NotFound(new { success = false, message = "Role was not found" });
+            }
         }
         catch (Exception ex)
         {
